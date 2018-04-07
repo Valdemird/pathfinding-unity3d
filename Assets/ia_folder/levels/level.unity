@@ -697,7 +697,7 @@ GameObject:
   - component: {fileID: 1502201928}
   m_Layer: 0
   m_Name: MapCreator
-  m_TagString: Untagged
+  m_TagString: mapcreator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

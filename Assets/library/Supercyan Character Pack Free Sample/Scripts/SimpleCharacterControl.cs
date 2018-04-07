@@ -19,7 +19,7 @@ public class SimpleCharacterControl : MonoBehaviour
     [SerializeField] private float m_moveSpeed = 2;
     [SerializeField] private float m_turnSpeed = 200;
     [SerializeField] private float m_jumpForce = 4;
-    [SerializeField] private Animator m_animator;
+    public Animator m_animator;
     [SerializeField] private Rigidbody m_rigidBody;
 
     [SerializeField] private ControlMode m_controlMode = ControlMode.Direct;
@@ -31,6 +31,7 @@ public class SimpleCharacterControl : MonoBehaviour
     private int currentAction;
     public Vector3 destination;
     NavMeshAgent agent;
+    bool finish;
 
     private float m_currentV = 0;
     private float m_currentH = 0;
@@ -68,11 +69,15 @@ public class SimpleCharacterControl : MonoBehaviour
 
     private void Start()
     {
+            
         agent = gameObject.GetComponent<NavMeshAgent>();
         commands = new Queue<Node>();
         currentAction = 0;
         firstMove = true;
         destination = transform.position;
+        finish = false;
+
+
     }
 
     private void OnCollisionStay(Collision collision)
@@ -123,6 +128,9 @@ public class SimpleCharacterControl : MonoBehaviour
             destination = new Vector3(casilla.posY, transform.position.y, casilla.posX);
             agent.SetDestination(destination);
             Debug.DrawRay(destination, Vector3.up * 5, Color.blue, Mathf.Infinity);
+        }
+        else {
+
         }
 
 

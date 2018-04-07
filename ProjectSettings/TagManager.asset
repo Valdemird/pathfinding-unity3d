@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - manager
+  - mapcreator
   layers:
   - Default
   - TransparentFX

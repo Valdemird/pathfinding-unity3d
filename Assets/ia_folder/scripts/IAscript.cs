@@ -15,11 +15,6 @@ public class IAscript : MonoBehaviour
     int Profundidad;
     int nodosExpandidos;
 
-    // Use this for initialization
-
-
-
-
     void Start()
     {
         nodosExpandidos = 0;
