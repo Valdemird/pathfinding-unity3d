@@ -18,7 +18,7 @@ public class MapCreatorScript : MonoBehaviour
 
     private bool mapDone = false;
     private bool marioRequest = false;
-    Queue<int> commands;
+    Queue<Node> commands;
     // Use this for initialization
 
 
@@ -35,7 +35,7 @@ public class MapCreatorScript : MonoBehaviour
 
     public void CreateMap(int[,] mapRepresentation)
     {
-        commands = new Queue<int>();
+        commands = new Queue<Node>();
         mapDone = false;
         turttles = new List<GameObject>();
         flowers = new List<GameObject>();
@@ -119,8 +119,8 @@ public class MapCreatorScript : MonoBehaviour
 
 
 
-    public void addCommands(List<int> commands) {
-        this.commands = new Queue<int>(commands);
+    public void addCommands(List<Node> commands) {
+        this.commands = new Queue<Node>(commands);
         marioRequest = true;
     }
 

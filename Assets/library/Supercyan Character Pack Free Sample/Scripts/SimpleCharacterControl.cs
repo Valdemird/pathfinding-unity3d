@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-
+using UnityEngine.AI;
 public class SimpleCharacterControl : MonoBehaviour
 {
 
@@ -26,10 +26,11 @@ public class SimpleCharacterControl : MonoBehaviour
     [SerializeField] private bool Bycommands;
     [SerializeField] private float commandDistance;
     // movimiento por instrucciones
-    public Queue<int> commands;
+    public Queue<Node> commands;
     private bool firstMove;
     private int currentAction;
-    private Vector3 startPosition;
+    public Vector3 destination;
+    NavMeshAgent agent;
 
     private float m_currentV = 0;
     private float m_currentH = 0;
@@ -47,6 +48,7 @@ public class SimpleCharacterControl : MonoBehaviour
 
     private bool m_isGrounded;
     private List<Collider> m_collisions = new List<Collider>();
+
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -66,10 +68,11 @@ public class SimpleCharacterControl : MonoBehaviour
 
     private void Start()
     {
-        commands = new Queue<int>();
+        agent = gameObject.GetComponent<NavMeshAgent>();
+        commands = new Queue<Node>();
         currentAction = 0;
         firstMove = true;
-        startPosition = transform.position;
+        destination = transform.position;
     }
 
     private void OnCollisionStay(Collision collision)
@@ -114,122 +117,22 @@ public class SimpleCharacterControl : MonoBehaviour
     void FixedUpdate()
     {
         m_animator.SetBool("Grounded", m_isGrounded);
-        float v;
-        float h;
-        if (Bycommands)
+        if (commands.Count != 0 && Vector3.Distance(destination, transform.position) < 0.2)
         {
-            v = 0;
-            h = 0;
-            if (commands.Count != 0)
-            {
-               
-                if ( firstMove || Vector3.Distance(startPosition, transform.position) >= commandDistance)
-                {
-                    transform.position = new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), Mathf.Round(transform.position.z));
-                    startPosition = transform.position;
-                    startPosition = transform.position;
-                    while ((currentAction = commands.Dequeue()) == 0) {
-                        firstMove = false;
-                    }
-                }
-                switch (currentAction)
-                {
-                    case Square.ABAJO:
-                        v = -1;
-                        break;
-                    case Square.ARRIBA:
-                        v = 1;
-                        break;
-                    case Square.IZQUIERDA:
-                        h = -1;
-                        break;
-                    case Square.DERECHA:
-                        h = 1;
-                        break;
-                }
-            }
-        }
-        else
-        {
-            v = Input.GetAxis("Vertical");
-            h = Input.GetAxis("Horizontal");
+            Square casilla = commands.Dequeue().data;
+            destination = new Vector3(casilla.posY, transform.position.y, casilla.posX);
+            agent.SetDestination(destination);
+            Debug.DrawRay(destination, Vector3.up * 5, Color.blue, Mathf.Infinity);
         }
 
-        switch (m_controlMode)
-        {
-            case ControlMode.Direct:
-                DirectUpdate(v, h);
-                break;
 
-            case ControlMode.Tank:
-                TankUpdate(v, h);
-                break;
-
-            default:
-                Debug.LogError("Unsupported state");
-                break;
-        }
-
+        m_animator.SetFloat("MoveSpeed", agent.velocity.magnitude/2);
         m_wasGrounded = m_isGrounded;
     }
 
 
-    private void TankUpdate(float v, float h)
-    {
-
-        bool walk = Input.GetKey(KeyCode.LeftShift);
-
-        if (v < 0)
-        {
-            if (walk) { v *= m_backwardsWalkScale; }
-            else { v *= m_backwardRunScale; }
-        }
-        else if (walk)
-        {
-            v *= m_walkScale;
-        }
-
-        m_currentV = Mathf.Lerp(m_currentV, v, Time.deltaTime * m_interpolation);
-        m_currentH = Mathf.Lerp(m_currentH, h, Time.deltaTime * m_interpolation);
-
-        transform.position += transform.forward * m_currentV * m_moveSpeed * Time.deltaTime;
-        transform.Rotate(0, m_currentH * m_turnSpeed * Time.deltaTime, 0);
-
-        m_animator.SetFloat("MoveSpeed", m_currentV);
-
-        JumpingAndLanding();
-    }
-
     private void DirectUpdate(float v, float h)
     {
-
-        Transform camera = Camera.main.transform;
-
-        if (true)
-        {
-            v *= m_walkScale;
-            h *= m_walkScale;
-        }
-
-        m_currentV = Mathf.Lerp(m_currentV, v, Time.deltaTime * m_interpolation);
-        m_currentH = Mathf.Lerp(m_currentH, h, Time.deltaTime * m_interpolation);
-
-        Vector3 direction = camera.forward * m_currentV + camera.right * m_currentH;
-
-        float directionLength = direction.magnitude;
-        direction.y = 0;
-        direction = direction.normalized * directionLength;
-
-        if (direction != Vector3.zero)
-        {
-            m_currentDirection = Vector3.Slerp(m_currentDirection, direction, Time.deltaTime * m_interpolation);
-
-            transform.rotation = Quaternion.LookRotation(m_currentDirection);
-            transform.position += m_currentDirection * m_moveSpeed * Time.deltaTime;
-
-            m_animator.SetFloat("MoveSpeed", direction.magnitude);
-        }
-
         JumpingAndLanding();
     }
 

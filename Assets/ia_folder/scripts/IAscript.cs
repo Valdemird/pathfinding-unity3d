@@ -57,10 +57,10 @@ public class IAscript : MonoBehaviour
         }
         time = Time.realtimeSinceStartup - time;
         mapCreatorScript.setInfo(time * 1000, result.depth, nodosExpandidos);
-        List<int> commands = new List<int>();
+        List<Node> commands = new List<Node>();
         while (result != null)
         {
-            commands.Add(result.action);
+            commands.Add(result);
 
             result = result.parent;
         }
@@ -69,12 +69,12 @@ public class IAscript : MonoBehaviour
         mapCreatorScript.showExpantions(nodosVisitados);
     }
 
-    void FixCommands(List<int> commands)
+    void FixCommands(List<Node> commands)
     {
         commands.Reverse();
         for (int i = 0; i < commands.Count; i++)
         {
-            commands[i] *= -1;
+            commands[i].action *= -1;
         }
     }
 
