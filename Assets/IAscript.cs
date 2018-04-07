@@ -11,6 +11,10 @@ public class IAscript : MonoBehaviour
     MapCreatorScript mapCreatorScript;
     int[,] mapRepresentation;
     string searchType;
+    float time;
+    int Profundidad;
+    int nodosExpandidos;
+
     // Use this for initialization
 
 
@@ -18,6 +22,7 @@ public class IAscript : MonoBehaviour
 
     void Start()
     {
+        nodosExpandidos = 0;
         mapCreatorScript = gameObject.GetComponent<MapCreatorScript>();
         LoadMap();
         mapCreatorScript.CreateMap(mapRepresentation);
@@ -31,6 +36,7 @@ public class IAscript : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
         Node result = null;
+        time = Time.realtimeSinceStartup;
         switch (searchType) {
             case MenuSelectionScript.AMPLITUD:
                 result = BusquedaPorAmplitud();
@@ -49,6 +55,8 @@ public class IAscript : MonoBehaviour
                 break;
 
         }
+        time = Time.realtimeSinceStartup - time;
+        mapCreatorScript.setInfo(time * 1000, result.depth, nodosExpandidos);
         List<int> commands = new List<int>();
         while (result != null)
         {
@@ -117,6 +125,7 @@ public class IAscript : MonoBehaviour
             else
             {
                 nodosVisitados.Add(currentNode);
+                nodosExpandidos++;
                 for (int i = Square.ABAJO; i <= Square.ARRIBA; i++)
                 {
                     Node son = Move(currentNode, i);
@@ -145,6 +154,7 @@ public class IAscript : MonoBehaviour
             else
             {
                 nodosVisitados.Add(currentNode);
+                nodosExpandidos++;
                 for (int i = Square.ABAJO; i <= Square.ARRIBA; i++)
                 {
                     Node son = Move(currentNode, i);
@@ -175,6 +185,7 @@ public class IAscript : MonoBehaviour
             else
             {
                 nodosVisitados.Add(currentNode);
+                nodosExpandidos++;
                 for (int i = Square.ABAJO; i <= Square.ARRIBA; i++)
                 {
                     Node son = Move(currentNode, i);
@@ -218,6 +229,7 @@ public class IAscript : MonoBehaviour
             }
             else
             {
+                nodosExpandidos++;
                 nodosVisitados.Add(currentNode);
                 for (int i = Square.ABAJO; i <= Square.ARRIBA; i++)
                 {
@@ -261,6 +273,7 @@ public class IAscript : MonoBehaviour
             }
             else
             {
+                nodosExpandidos++;
                 nodosVisitados.Add(currentNode);
                 for (int i = Square.ABAJO; i <= Square.ARRIBA; i++)
                 {
@@ -373,19 +386,6 @@ public class IAscript : MonoBehaviour
         {
             return null;
         }
-    }
-
-
-    void Print()
-    {
-        string mensaje = "";
-        for (int i = 0; i < mapRepresentation.GetLength(0); i++)
-        {
-            for (int j = 0; j < mapRepresentation.GetLength(1); j++)
-                mensaje += " " + mapRepresentation[i, j];
-        }
-
-        Debug.Log(mensaje);
     }
 }
 

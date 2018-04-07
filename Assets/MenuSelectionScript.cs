@@ -13,6 +13,7 @@ public class MenuSelectionScript : MonoBehaviour {
 
     public Dropdown dropdown;
     public Button startButton;
+    public Text RutaDelPath;
     List<string> opcionesInformada;
     List<string> opcionesNoInformadas;
     FileManager fileManager;
@@ -29,6 +30,7 @@ public class MenuSelectionScript : MonoBehaviour {
         opcionesNoInformadas.Add(PROFUNDIDAD);
         opcionesNoInformadas.Add(COSTO_UNIFORME);
         dropdown.AddOptions(opcionesInformada);
+        RutaDelPath.text = GameObject.FindGameObjectWithTag("manager").GetComponent<FileManager>().path;
 
         fileManager.searchType = dropdown.options[dropdown.value].text;
 

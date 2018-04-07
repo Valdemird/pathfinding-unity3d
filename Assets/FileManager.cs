@@ -1,32 +1,56 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
+﻿using UnityEngine;
+using Crosstales.FB;
 using System.IO;
 using System;
 using UnityEngine.SceneManagement;
 public class FileManager : MonoBehaviour {
 
-    string path;
+    public string path;
     public int[,] array2D = new int[10, 10];
     public Square root;
     public Square goal;
     public string searchType;
+    public MenuSelectionScript menuSelectionScript;
+
 
     void Start() {
         DontDestroyOnLoad(gameObject);
+        path = "";
+        menuSelectionScript.startButton.interactable = false;
+
+
     }
 
     public void loadLevel() {
         SceneManager.LoadScene("level", LoadSceneMode.Single);
     }
-	public void OpenExplorer () {
-        path  = EditorUtility.OpenFilePanel("Archivos", "", "txt");
+
+    public void loadMenu()
+    {
+        SceneManager.LoadScene("Menu", LoadSceneMode.Single);
+    }
+    public void OpenExplorer () {
+        
+        path  = FileBrowser.OpenSingleFile("Open File", "", "");
         if (path.Length != 0)
         {
             loadScene(path);
 
 
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            if (SceneManager.GetActiveScene().name == "level")
+            {
+                loadMenu();
+                GameObject.Destroy(gameObject);
+            }
+            else {
+                Application.Quit();
+            }
         }
     }
 
@@ -55,6 +79,8 @@ public class FileManager : MonoBehaviour {
                 }
                 i++;
             }
+            menuSelectionScript.RutaDelPath.text = path;
+            menuSelectionScript.startButton.interactable = true;
         }
         catch (FormatException e)
         {
@@ -63,9 +89,6 @@ public class FileManager : MonoBehaviour {
         finally {
             reader.Close();
         }
-
-
-        
     }
 }
 

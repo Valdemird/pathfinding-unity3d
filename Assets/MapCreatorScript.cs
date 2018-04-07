@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 public class MapCreatorScript : MonoBehaviour
 {
     public GameObject[] elements;
@@ -12,6 +11,10 @@ public class MapCreatorScript : MonoBehaviour
     public List<GameObject> turttles;
     public List<GameObject> flowers;
     public Text levelTitle;
+    public Text tiempoLabel;
+    public Text profundidadLabel;
+    public Text expancionLabel;
+    public GameObject panelInfo;
 
     private bool mapDone = false;
     private bool marioRequest = false;
@@ -90,7 +93,12 @@ public class MapCreatorScript : MonoBehaviour
 
     }
 
-
+    public void setInfo(float tiempo, int profundidad, int exp)
+    {
+        tiempoLabel.text = "Tiempo: " + tiempo + " milisegundos";
+        profundidadLabel.text = "Profundidad: " + profundidad;
+        expancionLabel.text = "Nodos expandidos: " + exp;
+    }
 
     public void showExpantions(List<Node> nodos) {
         StartCoroutine(Expand(nodos));
@@ -120,6 +128,7 @@ public class MapCreatorScript : MonoBehaviour
     {
         marioRequest = false;
         mario.GetComponent<SimpleCharacterControl>().commands = commands;
+        panelInfo.SetActive(true);
         yield return null;
     }
 
@@ -145,7 +154,7 @@ public class MapCreatorScript : MonoBehaviour
     }
 
     public void setText(string text) {
-        levelTitle.text = text;
+        levelTitle.text = "Algoritmo: " + text;
     }
 
     // Update is called once per frame
