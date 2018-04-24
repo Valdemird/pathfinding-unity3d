@@ -22,12 +22,12 @@ public class FileManager : MonoBehaviour {
     }
 
     public void loadLevel() {
-        SceneManager.LoadScene("level", LoadSceneMode.Single);
+        SceneManager.LoadScene(1, LoadSceneMode.Single);
     }
 
     public void loadMenu()
     {
-        SceneManager.LoadScene("Menu", LoadSceneMode.Single);
+        SceneManager.LoadScene(0, LoadSceneMode.Single);
     }
     public void OpenExplorer () {
         

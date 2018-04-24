@@ -124,7 +124,7 @@ public class IAscript : MonoBehaviour
                 for (int i = Square.ABAJO; i <= Square.ARRIBA; i++)
                 {
                     Node son = Move(currentNode, i);
-                    if (son != null && !nodosFrontera.Contains(son) && !nodosVisitados.Contains(son))
+                    if (son != null && !nodosFrontera.Contains(son) &&  !Node.wasOnTheWay(son)/*!nodosVisitados.Contains(son)*/)
                     {
                         nodosFrontera.Enqueue(son);
                     }
@@ -153,7 +153,7 @@ public class IAscript : MonoBehaviour
                 for (int i = Square.ABAJO; i <= Square.ARRIBA; i++)
                 {
                     Node son = Move(currentNode, i);
-                    if (son != null && !nodosFrontera.Contains(son) && !nodosVisitados.Contains(son))
+                    if (son != null && !nodosFrontera.Contains(son) && /*!Node.wasOnTheWay(son)*/!nodosVisitados.Contains(son))
                     {
                         nodosFrontera.Push(son);
                     }
@@ -184,7 +184,7 @@ public class IAscript : MonoBehaviour
                 for (int i = Square.ABAJO; i <= Square.ARRIBA; i++)
                 {
                     Node son = Move(currentNode, i);
-                    if (son != null && !nodosVisitados.Contains(son))
+                    if (son != null && !Node.wasOnTheWay(son)/*!nodosVisitados.Contains(son)*/)
                     {
                         if (nodosFrontera.Contains(son))
                         {
@@ -229,7 +229,7 @@ public class IAscript : MonoBehaviour
                 for (int i = Square.ABAJO; i <= Square.ARRIBA; i++)
                 {
                     Node son = Move(currentNode, i);
-                    if (son != null && !nodosVisitados.Contains(son))
+                    if (son != null && !Node.wasOnTheWay(son)/*!nodosVisitados.Contains(son)*/)
                     {
                         if (nodosFrontera.Contains(son))
                         {
@@ -273,7 +273,7 @@ public class IAscript : MonoBehaviour
                 for (int i = Square.ABAJO; i <= Square.ARRIBA; i++)
                 {
                     Node son = Move(currentNode, i);
-                    if (son != null && !nodosVisitados.Contains(son))
+                    if (son != null && !Node.wasOnTheWay(son)/*!nodosVisitados.Contains(son)*/)
                     {
                         if (nodosFrontera.Contains(son))
                         {
